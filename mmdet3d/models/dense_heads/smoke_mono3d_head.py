@@ -105,11 +105,19 @@ class SMOKEMono3DHead(AnchorFreeMono3DHead):
         cls_score = cls_score.sigmoid()  # turn to 0-1
         cls_score = cls_score.clamp(min=1e-4, max=1 - 1e-4)
         # (N, C, H, W)
-        offset_dims = bbox_pred[:, self.dim_channel, ...]
-        bbox_pred[:, self.dim_channel, ...] = offset_dims.sigmoid() - 0.5
+        # offset_dims = bbox_pred[:, self.dim_channel, ...]  # bbox_pred (1,8,96,320) offset_dims (1,3,96,320)
+        # bbox_pred[:, self.dim_channel, ...] = offset_dims.sigmoid() - 0.5  # dim_channel[3,4,5]
+        bbox_pred_1 = bbox_pred[:, [0,1,2], ...]
+        bbox_pred_2 = bbox_pred[:, [3,4,5], ...].sigmoid()-0.5
+        bbox_pred_3 = bbox_pred[:, [6,7], ...]
+        bbox_pred = torch.cat((bbox_pred_1,bbox_pred_2,bbox_pred_3),dim=1)
+
+        bbox_pred_1 = bbox_pred[:, [0, 1, 2,3,4,5], ...]
+        bbox_pred_2 = F.normalize(bbox_pred[:, [6,7], ...])
+        bbox_pred = torch.cat((bbox_pred_1, bbox_pred_2), dim=1)
         # (N, C, H, W)
-        vector_ori = bbox_pred[:, self.ori_channel, ...]
-        bbox_pred[:, self.ori_channel, ...] = F.normalize(vector_ori)
+        # vector_ori = bbox_pred[:, self.ori_channel, ...]  # (1,2,96,320)
+        # bbox_pred[:, self.ori_channel, ...] = F.normalize(vector_ori)  # ori_channel[6,7]
         return cls_score, bbox_pred
 
     def get_bboxes(self, cls_scores, bbox_preds, img_metas, rescale=None):

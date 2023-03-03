@@ -22,7 +22,7 @@ model = dict(
     test_cfg=dict(pts=dict(pc_range=point_cloud_range[:2])))
 
 dataset_type = 'NuScenesDataset'
-data_root = 'data/nuscenes/'
+data_root = '/media/ros/A666B94D66B91F4D/ros/new_deploy/new_mm3d/mmdetection3d/data/nuscenes/'
 file_client_args = dict(backend='disk')
 
 db_sampler = dict(

@@ -7,7 +7,7 @@ class_names = [
     'motorcycle', 'pedestrian', 'traffic_cone', 'barrier'
 ]
 dataset_type = 'NuScenesDataset'
-data_root = 'data/nuscenes/'
+data_root = '/media/ros/A666B94D66B91F4D/ros/new_deploy/new_mm3d/mmdetection3d/data/nuscenes/'
 # Input modality for nuScenes dataset, this is consistent with the submission
 # format which requires the information in input_modality.
 input_modality = dict(
@@ -104,7 +104,7 @@ eval_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=4,
+    samples_per_gpu=1,   # change the batch size
     workers_per_gpu=4,
     train=dict(
         type=dataset_type,
